@@ -16,7 +16,7 @@ class Note extends Model
      */
     protected $fillable = [
         'content',
-        'owner',
+        'ownerId',
         'title',
     ];
 }
