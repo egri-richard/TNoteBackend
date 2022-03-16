@@ -92,7 +92,7 @@ class TimetableController extends Controller
 
     public function getTimetable(int $id)
     {
-        $timetable = Timetable::get()->where('userId', $id);
+        $timetable = Timetable::where('userId', $id)->get()->toArray();
         
         return $timetable;
     }
