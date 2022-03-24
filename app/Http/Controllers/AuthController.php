@@ -13,6 +13,13 @@ class AuthController extends Controller
     public function register(UserRequest $request) {
         $data = $request->validate($request->rules());
 
+        $user = User::where('email', $data['email'])->first();
+        if($user) {
+            return [
+                'message' => 'This email is already taken'
+            ];         
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
