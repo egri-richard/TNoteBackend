@@ -13,6 +13,14 @@ class AuthController extends Controller
     public function register(UserRequest $request) {
         $data = $request->validate($request->rules());
 
+        $user = User::where('email', $data['email'])->first();
+
+        if($user != null) {
+            return [
+                'message' => 'This email is already taken'
+            ];
+        }
+        
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -37,9 +45,14 @@ class AuthController extends Controller
 
         $user = User::where('email', $data['email'])->first();
 
-        if(!$user || Hash::check($user->password, $data['password'])) {
+        if(!$user) {
             return [
-                'user' => $user,
+                'message' => 'This user does not exist'
+            ];
+        }
+
+        if(Hash::check($user->password, $data['password'])) {
+            return [
                 'message' => 'Wrong credentials'
             ];
         }
