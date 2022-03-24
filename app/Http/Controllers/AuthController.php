@@ -16,9 +16,10 @@ class AuthController extends Controller
         $user = User::where('email', $data['email'])->first();
 
         if($user != null) {
-            return [
-                'message' => 'This email is already taken'
-            ];
+            return response(
+                [ 'message' => 'This email is already taken'],
+                401
+            );
         }
         
         $user = User::create([
@@ -46,15 +47,17 @@ class AuthController extends Controller
         $user = User::where('email', $data['email'])->first();
 
         if(!$user) {
-            return [
-                'message' => 'This user does not exist'
-            ];
+            return response(
+                [ 'message' => 'This user does not exist'],
+                401
+            );
         }
 
-        if(Hash::check($user->password, $data['password'])) {
-            return [
-                'message' => 'Wrong credentials'
-            ];
+        if(!Hash::check($user->password, $data['password'])) {
+            return response(
+                [ 'message' => 'Wrong credentials'],
+                401
+            );
         }
 
         $token = $user->createToken('user-access')->plainTextToken;
