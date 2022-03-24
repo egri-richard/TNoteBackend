@@ -14,12 +14,14 @@ class AuthController extends Controller
         $data = $request->validate($request->rules());
 
         $user = User::where('email', $data['email'])->first();
-        if($user) {
-            return [
-                'message' => 'This email is already taken'
-            ];         
-        }
 
+        if($user != null) {
+            return response(
+                [ 'message' => 'This email is already taken'],
+                401
+            );
+        }
+        
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
