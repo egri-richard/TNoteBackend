@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\TTElements;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 
 class TTElementsController extends Controller
@@ -16,6 +18,17 @@ class TTElementsController extends Controller
     public function index()
     {
         $ttelements = TTElements::all();
+
+        foreach ($ttelements as $tte) {
+            $date = Carbon::parse($tte->created_at)->next($tte->day);
+
+            if(!$tte->repating && $date < today()) {
+                $tte->delete();
+            }
+        }
+
+        $ttelements = TTElements::all();
+
         return response()->json($ttelements, 200);
     }
 
