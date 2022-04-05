@@ -76,6 +76,7 @@ class TimetableController extends Controller
     {
         $timetable->fill($request->only(['userId', 'name']));
         $timetable->save();
+        
         return response()->json($timetable, 200);
     }
 
@@ -95,11 +96,5 @@ class TimetableController extends Controller
         $timetable = Timetable::where('userId', $id)->get()->toArray();
         
         return $timetable;
-    }
-
-    public function getFullTimetables(int $id) {
-        $ttids = Timetable::all()->where('userId', $id)->pluck('id');
-        $timeTableElementList = TTElements::whereIn('ttid', $ttids)->get()->toArray();
-        return response()->json($timeTableElementList, 200);
     }
 }

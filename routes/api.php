@@ -44,7 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //  id = timeTableId
     Route::get('/timetables/{id}/selectedtimetable', [TTElementsController::class, 'getAllElements']);
 
-    Route::get('/users/{id}/fulltimetables', [TimetableController::class, 'getFullTimetables']);
+    Route::get('/users/{id}/fulltimetables', [TTElementsController::class, 'getFullTimetables']);
     
     Route::get('/users/{id}/styles', [StyleController::class, 'getRelated']);
 });
