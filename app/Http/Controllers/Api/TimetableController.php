@@ -95,6 +95,6 @@ class TimetableController extends Controller
     {
         $timetable = Timetable::where('userId', $id)->get()->toArray();
         
-        return $timetable;
+        return response()->json($timetable, 200);
     }
 }

@@ -105,9 +105,10 @@ class TTElementsController extends Controller
      * @param  \App\Models\TTElements  $tTElements
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TTElements $tTElements)
+    public function destroy($id)
     {
-        return $tTElements->delete();
+        $tTElements = TTElements::findOrFail($id);
+        return response()->json($tTElements->delete(), 200);
     }
 
     public function getAllElements($tableId) 
