@@ -116,7 +116,7 @@ class TTElementsController extends Controller
         $this->deleteOutdatedTTElements($tableId);
 
         $elements = TTElements::where('ttid', $tableId)->get()->toArray();
-        return $elements;
+        return response()->json($elements, 200);
     }
 
     public function getFullTimetables(int $userId) {
