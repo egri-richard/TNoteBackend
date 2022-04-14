@@ -134,7 +134,7 @@ class TTElementsController extends Controller
         
         foreach ($ttelements as $tte) {
             $date = Carbon::parse($tte->created_at)->next($tte->day);
-            if(!$tte->repating && $date < today()->subDay()) {
+            if(!$tte->repeating && $date < today()->subDay()) {
                 $tte->delete();
             }
         };
