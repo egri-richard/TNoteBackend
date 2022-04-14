@@ -121,27 +121,22 @@ class TTElementsController extends Controller
 
     public function getFullTimetables(int $userId) {
         $ttids = Timetable::all()->where('userId', $userId)->pluck('id');
-        // foreach ($ttids as $ttid) {
-        //     return response($this->deleteOutdatedTTElements($ttid));
-        // }
+        
+        $this->deleteOutdatedTTElements($ttids);
+
         $timeTableElementList = TTElements::whereIn('ttid', $ttids)->get()->toArray();
         return response()->json($timeTableElementList, 200);
     }
 
     private function deleteOutdatedTTElements($tableId) {
-        //$ttelements = TTElements::where('ttid', $tableId)->get()->toArray();
-
-        return TTElements::where('ttid', $tableId)
-        ->where('repeating', 0)
-        ->whereRaw('DATE_ADD(created_at, INTERVAL (9 - IF(DAYOFWEEK(created_at)=1, 8, DAYOFWEEK(created_at))) DAY) < DATE_SUB(cast(? as date), INTERVAL 1 DAY)', Carbon::parse('2022/03/09')->toDateString())
-        ->get();
-
-        // foreach ($ttelements as $tte) {
-        //     $date = Carbon::parse($tte->created_at)->next($tte->day);
-
-        //     if(!$tte->repating && $date < today()) {
-        //         $tte->delete();
-        //     }
-        // }
+        if (is_array($tableId)) $ttelements = TTElements::whereIn('ttid', $tableId)->get();
+        else $ttelements = TTElements::where('ttid', $tableId)->get();
+        
+        foreach ($ttelements as $tte) {
+            $date = Carbon::parse($tte->created_at)->next($tte->day);
+            if(!$tte->repating && $date < today()->subDay()) {
+                $tte->delete();
+            }
+        };
     }
 }
