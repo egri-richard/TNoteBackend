@@ -8,6 +8,7 @@ use App\Models\TTElements;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TTElementsController extends Controller
 {
@@ -50,6 +51,8 @@ class TTElementsController extends Controller
             'start',
             'end',
             'repeating']));
+        $desc = $request->only(['description']);
+        if ($desc['description'] == null) $ttelements->fill(['description' => '']);
         $ttelements->save();
         return response()->json($ttelements, 201);
     }
@@ -95,6 +98,8 @@ class TTElementsController extends Controller
             'start',
             'end',
             'repeating']));
+        $desc = $request->only(['description']);
+        if ($desc['description'] == null) $tTElements->fill(['description' => '']);
         $tTElements->save();
         return response()->json($tTElements, 200);
     }
@@ -121,7 +126,7 @@ class TTElementsController extends Controller
 
     public function getFullTimetables(int $userId) {
         $ttids = Timetable::all()->where('userId', $userId)->pluck('id');
-        
+
         $this->deleteOutdatedTTElements($ttids);
 
         $timeTableElementList = TTElements::whereIn('ttid', $ttids)->get()->toArray();
@@ -129,7 +134,7 @@ class TTElementsController extends Controller
     }
 
     private function deleteOutdatedTTElements($tableId) {
-        if (is_array($tableId)) $ttelements = TTElements::whereIn('ttid', $tableId)->get();
+        if ($tableId->count() > 1) $ttelements = TTElements::whereIn('ttid', $tableId)->get();
         else $ttelements = TTElements::where('ttid', $tableId)->get();
         
         foreach ($ttelements as $tte) {
