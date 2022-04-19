@@ -116,7 +116,7 @@ class TTElementsController extends Controller
         return response()->json($tTElements->delete(), 200);
     }
 
-    public function getAllElements($tableId) 
+    public function getAllElements(int $tableId) 
     {
         $this->deleteOutdatedTTElements($tableId);
 
