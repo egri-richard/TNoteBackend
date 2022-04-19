@@ -116,9 +116,9 @@ class TTElementsController extends Controller
         return response()->json($tTElements->delete(), 200);
     }
 
-    public function getAllElements($tableId) 
+    public function getAllElements(int $tableId) 
     {
-        //$this->deleteOutdatedTTElements($tableId);
+        $this->deleteOutdatedTTElements($tableId);
 
         $elements = TTElements::where('ttid', $tableId)->get()->toArray();
         return response()->json($elements, 200);
@@ -126,7 +126,6 @@ class TTElementsController extends Controller
 
     public function getFullTimetables(int $userId) {
         $ttids = Timetable::all()->where('userId', $userId)->pluck('id');
-
         $this->deleteOutdatedTTElements($ttids);
 
         $timeTableElementList = TTElements::whereIn('ttid', $ttids)->get()->toArray();
@@ -134,8 +133,8 @@ class TTElementsController extends Controller
     }
 
     private function deleteOutdatedTTElements($tableId) {
-        if ($tableId->count() > 1) $ttelements = TTElements::whereIn('ttid', $tableId)->get();
-        else $ttelements = TTElements::where('ttid', $tableId)->get();
+        if (is_int($tableId)) $ttelements = TTElements::where('ttid', $tableId)->get();
+        else  $ttelements = TTElements::whereIn('ttid', $tableId)->get();
         
         foreach ($ttelements as $tte) {
             $date = Carbon::parse($tte->created_at)->next($tte->day);
