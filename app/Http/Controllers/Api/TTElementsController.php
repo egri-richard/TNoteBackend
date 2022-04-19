@@ -118,6 +118,7 @@ class TTElementsController extends Controller
 
     public function getAllElements(int $tableId) 
     {
+        $temp[] = [$tableId];
         $this->deleteOutdatedTTElements($tableId);
 
         $elements = TTElements::where('ttid', $tableId)->get()->toArray();
