@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Timetable;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,13 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('user-access')->plainTextToken;
+
+        $timetable = new Timetable();
+        $timetable->fill([
+            'userId' => $user->id,
+            'name' => 'My first timetable'
+        ]);
+        $timetable->save();
 
         $response = [
             'user' => $user,
